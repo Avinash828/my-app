@@ -1,0 +1,58 @@
+name: Go CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+        id: go
+      - name: Navigate to Go Component Directory
+        run: cd path/to/your/go/component
+
+      - name: Install Dependencies
+        run: go mod download
+
+      - name: Run golangci-lint
+        run: golangci-lint run ./...
+        continue-on-error: false # Fail the workflow if linting fails
+
+      - name: Unit Tests
+        run: go test -v ./...
+        continue-on-error: false # Fail the workflow if linting fails
+
+      - name: Check Code Coverage
+        run: go test -coverprofile=coverage.txt -covermode=atomic ./...
+
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: ./coverage.txt
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Dockerimage to DockerHub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./go/
+          file: ./go/Dockerfile
+          push: true
+          tags: Dockerhub_username/my-app:latest,Dockerhub_username/my-app:any_tag
