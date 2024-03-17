@@ -56,3 +56,16 @@ jobs:
           file: ./go/Dockerfile
           push: true
           tags: Dockerhub_username/my-app:latest,Dockerhub_username/my-app:any_tag
+  Deployment:
+      needs: build
+      name: deployment
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Install Docker-compose
+        uses: KengoTODA/actions-setup-docker-compose@v1
+        with:
+          version: '2.14.2'
+      - name: Spin up comtainer
+        run: docker-compose up -d
