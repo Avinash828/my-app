@@ -100,7 +100,7 @@ ECR).**
 Created in the pipeline through github actions tools
 
 ```yml
-- name: Login to DockerHub
+      - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
