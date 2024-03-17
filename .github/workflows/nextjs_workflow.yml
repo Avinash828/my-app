@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+      - name: Navigate to Go Component Directory
+        run: cd path/to/your/go/component
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
