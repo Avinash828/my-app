@@ -10,7 +10,7 @@ RUN go build -o app
 FROM alpine:latest
 WORKDIR /myapp
 # Copy the built executable from the builder stage
-COPY --from=builder /app/app .
+COPY --from=builder /myapp/app .
 # Expose the port the application runs on
 EXPOSE 8080
 
